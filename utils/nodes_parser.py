@@ -20,11 +20,15 @@ for node in nodes:
     try:
         requests.get(f'{"http" if not node["ssl"] else "https"}://{node["url"]}:{node["port"]}/get_info',
                      timeout=5)
+
     except requests.Timeout:
         continue
 
     version, height, _in, out = get_info(node['url'], node['port'],
                                          True if node['ssl'] else False)
+
+    with open('../data/nodes-history-data.json') as f:
+        history = json.load(f)
 
     active_nodes.append(
         {
@@ -35,7 +39,8 @@ for node in nodes:
             'version': version,
             'height': height,
             'in_conn': _in,
-            'out_conn': out
+            'out_conn': out,
+            'history': history[node['url']]
         }
     )
 

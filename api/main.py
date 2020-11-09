@@ -1,16 +1,16 @@
 #!/usr/bin/python3
 
 import sys
-import time
-import subprocess
 import json
+import subprocess
+import atexit
 
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-from werkzeug.contrib.fixers import ProxyFix
-import schedule
+from werkzeug.middleware.proxy_fix import ProxyFix
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
@@ -40,12 +40,21 @@ def pools():
     return jsonify(data)
 
 
+def perform_tasks():
+    subprocess.call([sys.executable, '../utils/nodes_history_parser.py'])
+    subprocess.call([sys.executable, '../utils/pools_history_parser.py'])
+
+    subprocess.call([sys.executable, '../utils/nodes_parser.py'])
+    subprocess.call([sys.executable, '../utils/pools_parser.py'])
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    subprocess.call([sys.executable, '../utils/history_data_init.py'])
 
-    schedule.every(5).minutes.do(subprocess.call([sys.executable, '../utils/nodes_parser.py']))
-    schedule.every(5).minutes.do(subprocess.call([sys.executable, '../utils/pools_parser.py']))
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=perform_tasks, trigger="interval", minutes=2)
+    scheduler.start()
 
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+    app.run(debug=True, use_reloader=False)
+
+    atexit.register(lambda: scheduler.shutdown())

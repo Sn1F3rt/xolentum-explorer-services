@@ -58,7 +58,8 @@ active_pools = list()
 
 for pool in pools:
     try:
-        requests.get(pool['api'] if not isinstance(pool['api'], list) else pool['api'][0])
+        requests.get(pool['api'] if not isinstance(pool['api'], list) else pool['api'][0], timeout=5)
+
     except requests.Timeout:
         continue
 
@@ -78,6 +79,9 @@ for pool in pools:
     else:
         continue
 
+    with open('../data/pools-history-data.json') as f:
+        history = json.load(f)
+
     # noinspection PyUnboundLocalVariable
     active_pools.append(
         {
@@ -88,7 +92,8 @@ for pool in pools:
             'miners': miners,
             'fee': str(fee) + '%' if '%' not in str(fee) else fee,
             'min_payout': min_payout,
-            'last_block_timestamp': last_block
+            'last_block_timestamp': last_block,
+            'history': history[pool['url']]
         }
     )
 
