@@ -18,16 +18,20 @@ def cn_js_info(api_url):
     return _height, _hash_rate, _miners, _fee, _min_payout, _last_block
 
 
-def rplant_info(api_url):
-    info = requests.get(api_url).json()['pools']['xolentum']
+def rplant_info(api_urls):
+    info = requests.get(api_urls[0]).json()['pools']['xolentum']
 
     _height = info['poolStats']['networkBlocks']
     _hash_rate = info['hashrate']
     _miners = info['poolStats']['minerCount']
     _fee = info['fee']
     _min_payout = info['minimumPayment']
-    # _last_block = info['lastblock']['timestamp']
-    _last_block = 123456890
+
+    info = requests.get(api_urls[1]).json()
+
+    blocks = [value for key, value in info.items() if 'xolentum' in key.lower()]
+
+    _last_block = int(blocks[0].split(':')[4])
 
     return _height, _hash_rate, _miners, _fee, _min_payout, _last_block
 
@@ -60,7 +64,8 @@ for pool in pools:
     try:
         requests.get(pool['api'] if not isinstance(pool['api'], list) else pool['api'][0], timeout=5)
 
-    except requests.Timeout:
+    except (requests.Timeout, requests.exceptions.ConnectionError,
+            requests.exceptions.ConnectTimeout):
         continue
 
     if pool['type'] == 'cn-js':

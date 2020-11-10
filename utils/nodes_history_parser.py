@@ -18,7 +18,8 @@ for node in nodes:
                      timeout=5)
         nodes_history[node['url']].append(1)
 
-    except requests.Timeout:
+    except (requests.Timeout, requests.exceptions.ConnectionError,
+            requests.exceptions.ConnectTimeout):
         nodes_history[node['url']].append(0)
 
 nodes_history = json.dumps(nodes_history, indent=4)

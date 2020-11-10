@@ -18,7 +18,8 @@ for pool in pools:
                      timeout=5)
         pools_history[pool['url']].append(1)
 
-    except requests.Timeout:
+    except (requests.Timeout, requests.exceptions.ConnectionError,
+            requests.exceptions.ConnectTimeout):
         pools_history[pool['url']].append(0)
 
 pools_history = json.dumps(pools_history, indent=4)

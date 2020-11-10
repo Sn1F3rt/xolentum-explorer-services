@@ -24,6 +24,21 @@ limiter = Limiter(
 )
 
 
+def perform_tasks():
+    subprocess.call([sys.executable, '../utils/nodes_history_parser.py'])
+    subprocess.call([sys.executable, '../utils/pools_history_parser.py'])
+
+    subprocess.call([sys.executable, '../utils/nodes_parser.py'])
+    subprocess.call([sys.executable, '../utils/pools_parser.py'])
+
+
+subprocess.call([sys.executable, '../utils/history_data_init.py'])
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=perform_tasks, trigger="interval", minutes=2)
+scheduler.start()
+
+
 @app.route('/nodes', methods=['GET'])
 def nodes():
     with open('../data/nodes-data.json') as f:
@@ -40,21 +55,7 @@ def pools():
     return jsonify(data)
 
 
-def perform_tasks():
-    subprocess.call([sys.executable, '../utils/nodes_history_parser.py'])
-    subprocess.call([sys.executable, '../utils/pools_history_parser.py'])
-
-    subprocess.call([sys.executable, '../utils/nodes_parser.py'])
-    subprocess.call([sys.executable, '../utils/pools_parser.py'])
-
-
 if __name__ == '__main__':
-    subprocess.call([sys.executable, '../utils/history_data_init.py'])
-
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(func=perform_tasks, trigger="interval", minutes=2)
-    scheduler.start()
-
     app.run(debug=True, use_reloader=False)
 
-    atexit.register(lambda: scheduler.shutdown())
+atexit.register(lambda: scheduler.shutdown())

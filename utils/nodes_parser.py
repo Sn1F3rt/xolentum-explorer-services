@@ -21,7 +21,8 @@ for node in nodes:
         requests.get(f'{"http" if not node["ssl"] else "https"}://{node["url"]}:{node["port"]}/get_info',
                      timeout=5)
 
-    except requests.Timeout:
+    except (requests.Timeout, requests.exceptions.ConnectionError,
+            requests.exceptions.ConnectTimeout):
         continue
 
     version, height, _in, out = get_info(node['url'], node['port'],
