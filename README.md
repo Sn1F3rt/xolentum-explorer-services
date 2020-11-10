@@ -17,7 +17,7 @@ git clone https://github.com/sohamb03/xolentum-explorer-utils.git
 Install `pipenv` and then install the dependencies, and enter the shell. 
 
 ```sh
-python3 -m pip pipenv
+python3 -m pip install pipenv
 
 pipenv install
 pipenv shell
