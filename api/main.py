@@ -3,14 +3,13 @@
 import sys
 import json
 import subprocess
-import atexit
+from pathlib import Path
 
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from werkzeug.middleware.proxy_fix import ProxyFix
-from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
@@ -23,25 +22,12 @@ limiter = Limiter(
     default_limits=["2 per second"]
 )
 
-
-def perform_tasks():
-    subprocess.call([sys.executable, '../utils/nodes_history_parser.py'])
-    subprocess.call([sys.executable, '../utils/pools_history_parser.py'])
-
-    subprocess.call([sys.executable, '../utils/nodes_parser.py'])
-    subprocess.call([sys.executable, '../utils/pools_parser.py'])
-
-
-subprocess.call([sys.executable, '../utils/history_data_init.py'])
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=perform_tasks, trigger="interval", minutes=2)
-scheduler.start()
+subprocess.call([sys.executable, Path(__file__).parent / '../utils/history_data_init.py'])
 
 
 @app.route('/nodes', methods=['GET'])
 def nodes():
-    with open('../data/nodes-data.json') as f:
+    with open(Path(__file__).parent / '../data/nodes-data.json') as f:
         data = json.load(f)
 
     return jsonify(data)
@@ -49,7 +35,7 @@ def nodes():
 
 @app.route('/pools', methods=['GET'])
 def pools():
-    with open('../data/pools-data.json') as f:
+    with open(Path(__file__).parent / '../data/pools-data.json') as f:
         data = json.load(f)
 
     return jsonify(data)
@@ -58,4 +44,3 @@ def pools():
 if __name__ == '__main__':
     app.run(debug=True, use_reloader=False)
 
-atexit.register(lambda: scheduler.shutdown())

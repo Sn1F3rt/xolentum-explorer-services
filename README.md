@@ -25,20 +25,30 @@ pipenv shell
 
 ## Usage
 
-For development,
+For development:
 
 ```sh
 cd api && python3 main.py
 ```
 
-For production, start the application using gunicorn. 
+For production, start the application using gunicorn:
 
 ```sh
 gunicorn -w 5 -b 127.0.0.1:5000 wsgi
 ```
 
+Install the required cron jobs:
+
+```sh
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/nodes-history-parser.py"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/pools-history-parser.py"; } | crontab -
+
+crontab -l | { cat; echo "*/5 * * * * python3 ~/xolentum-explorer-utils/utils/nodes-parser.py"; } | crontab -
+crontab -l | { cat; echo "*/5 * * * * python3 ~/xolentum-explorer-utils/utils/pools-parser.py"; } | crontab -
+```
+
 ## License 
 
-[BSD-3-Clause License](LiCENSE)
+[BSD-3-Clause License](LICENSE)
 
-Copyright © 2020 Sayan Bhattacharyya, The Xolentum Project
+Copyright &copy; 2020 Sayan Bhattacharyya, The Xolentum Project

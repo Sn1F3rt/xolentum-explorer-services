@@ -1,12 +1,14 @@
 #!/usr/bin/python3
 
 import json
+from pathlib import Path
+
 import requests
 
 nodes = requests.get('https://raw.githubusercontent.com/xolentum/public-nodes-json/main/'
                      'xolentum-public-nodes.json').json()['nodes']
 
-with open('../data/nodes-history-data.json') as f:
+with open(Path(__file__).parent / '../data/nodes-history-data.json') as f:
     nodes_history = json.load(f)
 
 for node in nodes:
@@ -24,5 +26,6 @@ for node in nodes:
 
 nodes_history = json.dumps(nodes_history, indent=4)
 
-with open('../data/nodes-history-data.json', 'w') as f:
+with open(Path(__file__).parent / '../data/nodes-history-data.json', 'w') as f:
     f.write(nodes_history)
+

@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
 import json
+from pathlib import Path
+
 import requests
 
 
@@ -28,24 +30,29 @@ for node in nodes:
     version, height, _in, out = get_info(node['url'], node['port'],
                                          True if node['ssl'] else False)
 
-    with open('../data/nodes-history-data.json') as f:
+    with open(Path(__file__).parent / '../data/nodes-history-data.json') as f:
         history = json.load(f)
 
-    active_nodes.append(
-        {
-            'name': node['name'],
-            'host': node['url'],
-            'port': node['port'],
-            'ssl': node['ssl'],
-            'version': version,
-            'height': height,
-            'in_conn': _in,
-            'out_conn': out,
-            'history': history[node['url']]
-        }
-    )
+    try:
+        active_nodes.append(
+            {
+                'name': node['name'],
+                'host': node['url'],
+                'port': node['port'],
+                'ssl': node['ssl'],
+                'version': version,
+                'height': height,
+                'in_conn': _in,
+                'out_conn': out,
+                'history': history[node['url']]
+            }
+        )
+
+    except IndexError:
+        pass
 
 active_nodes = json.dumps(active_nodes, indent=4)
 
-with open('../data/nodes-data.json', 'w') as f:
+with open(Path(__file__).parent / '../data/nodes-data.json', 'w') as f:
     f.write(active_nodes)
+

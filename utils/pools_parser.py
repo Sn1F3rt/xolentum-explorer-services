@@ -2,6 +2,8 @@
 
 import math
 import json
+from pathlib import Path
+
 import requests
 
 
@@ -84,25 +86,30 @@ for pool in pools:
     else:
         continue
 
-    with open('../data/pools-history-data.json') as f:
+    with open(Path(__file__).parent / '../data/pools-history-data.json') as f:
         history = json.load(f)
 
-    # noinspection PyUnboundLocalVariable
-    active_pools.append(
-        {
-            'name': pool['name'],
-            'url': pool['url'],
-            'height': height,
-            'hashrate': hash_rate,
-            'miners': miners,
-            'fee': str(fee) + '%' if '%' not in str(fee) else fee,
-            'min_payout': min_payout,
-            'last_block_timestamp': last_block,
-            'history': history[pool['url']]
-        }
-    )
+    try:
+        # noinspection PyUnboundLocalVariable
+        active_pools.append(
+            {
+                'name': pool['name'],
+                'url': pool['url'],
+                'height': height,
+                'hashrate': hash_rate,
+                'miners': miners,
+                'fee': str(fee) + '%' if '%' not in str(fee) else fee,
+                'min_payout': min_payout,
+                'last_block_timestamp': last_block,
+                'history': history[pool['url']]
+            }
+        )
+
+    except IndexError:
+        pass
 
 active_pools = json.dumps(active_pools, indent=4)
 
-with open('../data/pools-data.json', 'w') as f:
+with open(Path(__file__).parent / '../data/pools-data.json', 'w') as f:
     f.write(active_pools)
+
