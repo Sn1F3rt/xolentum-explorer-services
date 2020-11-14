@@ -40,11 +40,11 @@ gunicorn -w 5 -b 127.0.0.1:5000 wsgi
 Install the required cron jobs:
 
 ```sh
-crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/nodes-history-parser.py"; } | crontab -
-crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/pools-history-parser.py"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/nodes_history_parser.py"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/pools_history_parser.py"; } | crontab -
 
-crontab -l | { cat; echo "*/5 * * * * python3 ~/xolentum-explorer-utils/utils/nodes-parser.py"; } | crontab -
-crontab -l | { cat; echo "*/5 * * * * python3 ~/xolentum-explorer-utils/utils/pools-parser.py"; } | crontab -
+crontab -l | { cat; echo "*/5 * * * * python3 ~/xolentum-explorer-utils/utils/nodes_parser.py"; } | crontab -
+crontab -l | { cat; echo "*/5 * * * * python3 ~/xolentum-explorer-utils/utils/pools_parser.py"; } | crontab -
 ```
 
 ## License 
