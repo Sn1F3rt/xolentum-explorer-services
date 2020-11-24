@@ -2,13 +2,17 @@
 
 import math
 import json
+import urllib3
 from pathlib import Path
 
 import requests
 
 
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+
 def cn_js_info(api_url):
-    info = requests.get(api_url).json()
+    info = requests.get(api_url, verify=False).json()
 
     _height = info['network']['height']
     _hash_rate = info['pool']['hashrate']
@@ -21,7 +25,7 @@ def cn_js_info(api_url):
 
 
 def rplant_info(api_urls):
-    info = requests.get(api_urls[0]).json()['pools']['xolentum']
+    info = requests.get(api_urls[0], verify=False).json()['pools']['xolentum']
 
     _height = info['poolStats']['networkBlocks']
     _hash_rate = info['hashrate']
@@ -39,7 +43,7 @@ def rplant_info(api_urls):
 
 
 def gntl_info(api_urls):
-    info = requests.get(api_urls[0]).json()['pool_statistics']
+    info = requests.get(api_urls[0], verify=False).json()['pool_statistics']
 
     _hash_rate = info['hashRate']
     _miners = info['miners']
@@ -64,7 +68,8 @@ active_pools = list()
 
 for pool in pools:
     try:
-        requests.get(pool['api'] if not isinstance(pool['api'], list) else pool['api'][0], timeout=5)
+        requests.get(pool['api'] if not isinstance(pool['api'], list) else pool['api'][0],
+                     verify=False, timeout=5)
 
     except (requests.Timeout, requests.exceptions.ConnectionError,
             requests.exceptions.ConnectTimeout):
@@ -112,4 +117,3 @@ active_pools = json.dumps(active_pools, indent=4)
 
 with open(Path(__file__).parent / '../data/pools-data.json', 'w') as f:
     f.write(active_pools)
-

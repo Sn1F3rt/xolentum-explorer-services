@@ -31,4 +31,3 @@ pools_history = json.dumps(pools_history, indent=4)
 
 with open(Path(__file__).parent / '../data/pools-history-data.json', 'w') as f:
     f.write(pools_history)
-

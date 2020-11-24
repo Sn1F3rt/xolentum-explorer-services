@@ -2,8 +2,13 @@
 
 import json
 from pathlib import Path
+import urllib3
 
 import requests
+
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 nodes = requests.get('https://raw.githubusercontent.com/xolentum/public-nodes-json/main/'
                      'xolentum-public-nodes.json').json()['nodes']
@@ -17,7 +22,7 @@ for node in nodes:
 
     try:
         requests.get(f'{"http" if not node["ssl"] else "https"}://{node["url"]}:{node["port"]}/get_info',
-                     timeout=5)
+                     verify=False, timeout=5)
         nodes_history[node['url']].append(1)
 
     except (requests.Timeout, requests.exceptions.ConnectionError,
@@ -28,4 +33,3 @@ nodes_history = json.dumps(nodes_history, indent=4)
 
 with open(Path(__file__).parent / '../data/nodes-history-data.json', 'w') as f:
     f.write(nodes_history)
-

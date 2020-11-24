@@ -1,9 +1,14 @@
 #!/usr/bin/python3
 
 import json
+import urllib3
 from pathlib import Path
 
 import requests
+
+
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
 
 pools = requests.get('https://raw.githubusercontent.com/xolentum/mining-pools-json/main/'
                      'xolentum-mining-pools.json').json()['pools']
@@ -17,7 +22,7 @@ for pool in pools:
 
     try:
         requests.get(pool['api'] if not isinstance(pool['api'], list) else pool['api'][0],
-                     timeout=5)
+                     verify=False, timeout=5)
         pools_history[pool['url']].append(1)
 
     except (requests.Timeout, requests.exceptions.ConnectionError,
@@ -28,4 +33,3 @@ pools_history = json.dumps(pools_history, indent=4)
 
 with open(Path(__file__).parent / '../data/pools-history-data.json', 'w') as f:
     f.write(pools_history)
-
