@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import os
 import sys
 import json
 import subprocess
@@ -21,6 +22,18 @@ limiter = Limiter(
     key_func=get_remote_address,
     default_limits=["2 per second"]
 )
+
+location = Path(__file__).parent / '../data'
+
+files = [
+    'nodes-data.json', 
+    'pools-data.json', 
+    'nodes-history-data.json', 
+    'pools-history-data.json'
+  ]
+
+for file in files:
+    os.remove(os.path.join(location, file))
 
 subprocess.call([sys.executable, Path(__file__).parent / '../utils/history_data_init.py'])
 
