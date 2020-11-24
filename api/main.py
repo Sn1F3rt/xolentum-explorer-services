@@ -23,7 +23,7 @@ limiter = Limiter(
     default_limits=["2 per second"]
 )
 
-location = Path(__file__).parent / '../data'
+location = os.getcwd().replace('/api', '/data')
 
 files = [
     'nodes-data.json', 
