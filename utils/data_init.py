@@ -10,4 +10,7 @@ files = [
   ]
 
 for file in files:
-    os.remove(os.path.join(location, file))
+    try:
+        os.remove(os.path.join(location, file))
+    except FileNotFoundError:
+        continue
