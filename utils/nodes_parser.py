@@ -40,6 +40,7 @@ for node in nodes:
                 'name': node['name'],
                 'host': node['url'],
                 'port': node['port'],
+                'url': f"{node['url']}:{node['port']}",
                 'ssl': node['ssl'],
                 'height': info['height'],
                 'top_block_hash': info['top_block_hash'],
