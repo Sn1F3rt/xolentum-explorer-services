@@ -14,14 +14,14 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 def cn_js_info(api_url):
     info = requests.get(api_url, verify=False).json()
 
-    _height = info['network']['height']
+    _height = info['lastblock']['height']
     _hash_rate = info['pool']['hashrate']
     _miners = info['pool']['miners']
     _fee = info['config']['fee']
     _min_payout = info['config']['minPaymentThreshold'] / math.pow(10, 12)
     _last_block = {
-        'height': info['lastblock']['height'],
-        'timestamp': info['lastblock']['timestamp']
+        'height': info['pool']['blocks'][1],
+        'timestamp': info['pool']['blocks'][0].split(':')[3]
     }
 
     return _height, _hash_rate, _miners, _fee, _min_payout, _last_block
