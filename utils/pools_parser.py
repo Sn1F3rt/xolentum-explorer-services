@@ -19,7 +19,10 @@ def cn_js_info(api_url):
     _miners = info['pool']['miners']
     _fee = info['config']['fee']
     _min_payout = info['config']['minPaymentThreshold'] / math.pow(10, 12)
-    _last_block = info['lastblock']['timestamp']
+    _last_block = {
+        'height': info['lastblock']['height'],
+        'timestamp': info['lastblock']['timestamp']
+    }
 
     return _height, _hash_rate, _miners, _fee, _min_payout, _last_block
 
@@ -37,7 +40,10 @@ def rplant_info(api_urls):
 
     blocks = [value for key, value in info.items() if 'xolentum' in key.lower()]
 
-    _last_block = int(blocks[0].split(':')[4])
+    _last_block = {
+        'height': int(blocks[0].split(':')[2]),
+        'timestamp': int(blocks[0].split(':')[4])
+    }
 
     return _height, _hash_rate, _miners, _fee, _min_payout, _last_block
 
@@ -47,7 +53,10 @@ def gntl_info(api_urls):
 
     _hash_rate = info['hashRate']
     _miners = info['miners']
-    _last_block = info['lastBlockFoundTime']
+    _last_block = {
+        'height': info['lastBlockFound'],
+        'timestamp': info['lastBlockFoundTime']
+    }
 
     info = requests.get(api_urls[1]).json()
 
@@ -67,12 +76,12 @@ pools = requests.get('https://raw.githubusercontent.com/xolentum/mining-pools-js
 active_pools = list()
 
 for pool in pools:
+    # noinspection PyBroadException
     try:
         requests.get(pool['api'] if not isinstance(pool['api'], list) else pool['api'][0],
                      verify=False, timeout=5)
 
-    except (requests.Timeout, requests.exceptions.ConnectionError,
-            requests.exceptions.ConnectTimeout):
+    except:
         continue
 
     if pool['type'] == 'cn-js':
@@ -105,7 +114,7 @@ for pool in pools:
                 'miners': miners,
                 'fee': str(fee) + '%' if '%' not in str(fee) else fee,
                 'min_payout': min_payout,
-                'last_block_timestamp': last_block,
+                'last_block': last_block,
                 'history': history[pool['url']]
             }
         )
