@@ -11,11 +11,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
 def get_info(node_host, node_port, ssl=False):
-    info = requests.get(f'{"http" if not ssl else "https"}'
+    return requests.get(f'{"http" if not ssl else "https"}'
                         f'://{node_host}:{node_port}/get_info', verify=False).json()
-
-    return info['version'], info['height'], info['incoming_connections_count'], \
-        info['outgoing_connections_count']
 
 
 nodes = requests.get('https://raw.githubusercontent.com/xolentum/public-nodes-json/main/'
@@ -32,8 +29,7 @@ for node in nodes:
     except:
         continue
 
-    version, height, _in, out = get_info(node['url'], node['port'],
-                                         True if node['ssl'] else False)
+    info = get_info(node['url'], node['port'], True if node['ssl'] else False)
 
     with open(Path(__file__).parent / '../data/nodes-history-data.json') as f:
         history = json.load(f)
@@ -45,10 +41,13 @@ for node in nodes:
                 'host': node['url'],
                 'port': node['port'],
                 'ssl': node['ssl'],
-                'version': version,
-                'height': height,
-                'in_conn': _in,
-                'out_conn': out,
+                'height': info['height'],
+                'top_block_hash': info['top_block_hash'],
+                'difficulty': info['difficulty'],
+                'rpc_connections_count': info['rpc_connections_count'],
+                'incoming_connections_count': info['incoming_connections_count'],
+                'outgoing_connections_count': info['outgoing_connections_count'],
+                'version': info['version'],
                 'history': history[node['url']]
             }
         )
