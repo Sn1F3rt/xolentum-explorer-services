@@ -109,6 +109,7 @@ for pool in pools:
             {
                 'name': pool['name'],
                 'url': pool['url'],
+                'host': pool['url'].replace('http://', '').replace('https://', '').rstrip('/'),
                 'height': height,
                 'hashrate': hash_rate,
                 'miners': miners,
