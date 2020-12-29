@@ -25,6 +25,8 @@ limiter = Limiter(
 subprocess.call([sys.executable, Path(__file__).parent / '../utils/data_init.py'])
 subprocess.call([sys.executable, Path(__file__).parent / '../utils/history_data_init.py'])
 
+subprocess.call([sys.executable, Path(__file__).parent / '../utils/blocks_data_init.py'])
+
 
 @app.route('/nodes', methods=['GET'])
 def nodes():
@@ -37,6 +39,14 @@ def nodes():
 @app.route('/pools', methods=['GET'])
 def pools():
     with open(Path(__file__).parent / '../data/pools-data.json') as f:
+        data = json.load(f)
+
+    return jsonify(data)
+
+
+@app.route('/blocks', methods=['GET'])
+def blocks():
+    with open(Path(__file__).parent / '../data/blocks-data.json') as f:
         data = json.load(f)
 
     return jsonify(data)
