@@ -54,8 +54,9 @@ Install the required cron jobs:
 crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/nodes_history_parser.py"; } | crontab -
 crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/pools_history_parser.py"; } | crontab -
 
-crontab -l | { cat; echo "*/5 * * * * python3 ~/xolentum-explorer-utils/utils/nodes_parser.py"; } | crontab -
-crontab -l | { cat; echo "*/5 * * * * python3 ~/xolentum-explorer-utils/utils/pools_parser.py"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/nodes_parser.py"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/pools_parser.py"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/blocks_parser.py"; } | crontab -
 ```
 
 ## License 
