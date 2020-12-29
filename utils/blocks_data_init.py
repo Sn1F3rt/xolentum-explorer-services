@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 import requests
+# from tqdm import tqdm
 
 with open('../config.json') as f:
     data = json.load(f)
@@ -17,35 +18,80 @@ blocks_data = list()
 current_height = requests.get(f'{"https" if ssl else "http"}://{host}:{port}/get_info')\
     .json()['height']
 
-for block_height in range(1, current_height + 1):
+# progress_bar = tqdm(total=current_height, unit=' blocks', desc='Caching blocks data', unit_scale=True)
+
+till_height = current_height - current_height % 1000
+
+print(till_height)
+
+for block_height in range(1, till_height + 1, 1000):
     # noinspection SpellCheckingInspection
     raw_data = requests.post(
         f'{"https" if ssl else "http"}://{host}:{port}/json_rpc',
-        data={
+        data=json.dumps({
             'jsonrpc': '2.0',
             'id': '0',
-            'method': 'get_block_header_by_height',
+            'method': 'get_block_headers_range',
             'params': {
-                    'height': block_height
+                    'start_height': block_height,
+                    'end_height': block_height + 1000,
                     }
-            },
+            }),
         headers={
             'Content-type': 'application/json'
         }
     )\
-        .json()['result']['block_header']
+        .json()['result']['headers']
 
-    # noinspection SpellCheckingInspection
-    blocks_data.append(
-        {
-            'height': raw_data['height'],
-            'already_generated_coins': raw_data['already_generated_coins'],
-            'difficulty': raw_data['difficulty'],
-            'num_txes': raw_data['num_txes'],
-            'reward': raw_data['reward'],
-            'timestamp': raw_data['timestamp']
+    for header in raw_data:
+        # noinspection SpellCheckingInspection
+        blocks_data.append(
+            {
+                'height': header['height'],
+                # 'already_generated_coins': raw_data['already_generated_coins'],
+                'difficulty': header['difficulty'],
+                'num_txes': header['num_txes'],
+                'reward': header['reward'],
+                'timestamp': header['timestamp']
+            }
+        )
+
+    # progress_bar.update(block_height)
+    print(f'Processed till block : {block_height}')
+
+if current_height - till_height > 0:
+    raw_data = requests.post(
+        f'{"https" if ssl else "http"}://{host}:{port}/json_rpc',
+        data=json.dumps({
+            'jsonrpc': '2.0',
+            'id': '0',
+            'method': 'get_block_headers_range',
+            'params': {
+                'start_height': till_height + 1,
+                'end_height': current_height,
+            }
+        }),
+        headers={
+            'Content-type': 'application/json'
         }
-    )
+    ) \
+        .json()['result']['headers']
+
+    for header in raw_data:
+        # noinspection SpellCheckingInspection
+        blocks_data.append(
+            {
+                'height': header['height'],
+                # 'already_generated_coins': raw_data['already_generated_coins'],
+                'difficulty': header['difficulty'],
+                'num_txes': header['num_txes'],
+                'reward': header['reward'],
+                'timestamp': header['timestamp']
+            }
+        )
+
+
+# progress_bar.close()
 
 blocks_data = json.dumps(blocks_data, indent=4)
 
