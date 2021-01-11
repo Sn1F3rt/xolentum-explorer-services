@@ -53,6 +53,7 @@ for header in raw_data:
     blocks_data.append(
         {
             'height': header['height'],
+            'block_size': header['block_size'],
             'already_generated_coins': header['already_generated_coins'],
             'difficulty': header['difficulty'],
             'num_txes': header['num_txes'],
