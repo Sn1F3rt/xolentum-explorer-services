@@ -133,3 +133,4 @@ dmypy.json
 
 # Project Specific
 data/
+config.json

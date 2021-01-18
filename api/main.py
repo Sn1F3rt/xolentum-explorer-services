@@ -6,12 +6,14 @@ import logging
 import subprocess
 from pathlib import Path
 
-from flask import Flask, jsonify
+import requests
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from werkzeug.middleware.proxy_fix import ProxyFix
 
+# noinspection SpellCheckingInspection
 logging.basicConfig(format='%(asctime)s - [%(levelname)s] %(message)s', level=logging.INFO)
 
 app = Flask(__name__)
@@ -68,6 +70,48 @@ def blocks():
         data = json.load(f)
 
     return jsonify(data)
+
+
+@app.route('/node_web', methods=['GET', 'POST'])
+@app.route('/node_web/<end_point>', methods=['GET', 'POST'])
+def node_web(end_point=None):
+    with open(Path(__file__).parent / '../config.json') as f:
+        data = json.load(f)
+        daemon_host = data['daemon_host']
+        daemon_port = data['daemon_port']
+        ssl = data['ssl']
+
+    if request.method == 'GET':
+        r = requests.get(
+            url=f'{"http" if not ssl else "https"}://{daemon_host}:{daemon_port}/'
+            f'{end_point if end_point else "json_rpc"}'
+        )
+
+        if r.status_code != 404:
+            return jsonify(r.json()), r.status_code
+
+        else:
+            return jsonify({'message': 'Method not found.'}), 404
+
+    else:
+        params = request.json
+
+        print(params)
+
+        r = requests.post(
+            url=f'{"http" if not ssl else "https"}://{daemon_host}:{daemon_port}/'
+            f'{end_point if end_point else "json_rpc"}',
+            data=params,
+            headers={
+                'Content-Type': 'application/json'
+            }
+        )
+
+        if r.status_code != 404:
+            return jsonify(r.json()), r.status_code
+
+        else:
+            return jsonify({'message': 'Method not found.'}), 404
 
 
 if __name__ == '__main__':
