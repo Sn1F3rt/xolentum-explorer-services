@@ -101,7 +101,7 @@ def node_web(end_point=None):
         r = requests.post(
             url=f'{"http" if not ssl else "https"}://{daemon_host}:{daemon_port}/'
             f'{end_point if end_point else "json_rpc"}',
-            json=params,
+            data=json.dumps(params),
             headers={
                 'Content-Type': 'application/json'
             }
