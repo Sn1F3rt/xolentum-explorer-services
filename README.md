@@ -51,12 +51,12 @@ You can check that the service started successfully by using `sudo systemctl sta
 Install the required cron jobs:
 
 ```sh
-crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/nodes_history_parser.py"; } | crontab -
-crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/pools_history_parser.py"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/nodes_history_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/pools_history_parser.py >/dev/null 2>&1"; } | crontab -
 
-crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/nodes_parser.py"; } | crontab -
-crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/pools_parser.py"; } | crontab -
-crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/blocks_parser.py"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/nodes_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/pools_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/blocks_parser.py >/dev/null 2>&1"; } | crontab -
 ```
 
 ## License 
