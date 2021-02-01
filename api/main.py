@@ -24,7 +24,9 @@ cors = CORS(app)
 limiter = Limiter(
     app,
     key_func=get_remote_address,
-    default_limits=["2 per second"]
+    default_limits=["2 per second"],
+    default_limits_exempt_when=lambda:
+    request.environ.get('HTTP_ORIGIN', None) == 'https://explorer.xolentum.org'
 )
 
 logging.info('Clearing stale data')
@@ -94,14 +96,12 @@ def node_web(end_point=None):
             return jsonify({'message': 'Method not found.'}), 404
 
     else:
-        params = request.json
-
-        print(params)
+        params = request.get_json(force=True)
 
         r = requests.post(
             url=f'{"http" if not ssl else "https"}://{daemon_host}:{daemon_port}/'
             f'{end_point if end_point else "json_rpc"}',
-            data=params,
+            data=json.dumps(params),
             headers={
                 'Content-Type': 'application/json'
             }
