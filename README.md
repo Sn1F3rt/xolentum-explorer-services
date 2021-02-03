@@ -1,4 +1,4 @@
-# Xolentum Block Explorer Utils
+# Xolentum Block Explorer Services (XES)
 
 ## About
 
@@ -11,7 +11,7 @@ this API serves the data for `Nodes` and `Pools`, along with uptime history. The
 Clone the repository either using `git` or by downloading a ZIP file using the *Download* button above. 
 
 ```sh
-git clone https://github.com/sohamb03/xolentum-explorer-utils.git
+git clone https://github.com/sohamb03/xolentum-explorer-services.git
 ```
 
 Install `pipenv` and then install the dependencies, and enter the shell. 
@@ -37,26 +37,26 @@ For production, it is recommended to use gunicorn:
 gunicorn -w 5 -b 127.0.0.1:5000 wsgi
 ```
 
-An example system unit file `xolentum-explorer-utils.service` has been provided. Replace the necessary information in the file, copy it into the system unit files directory and start the API. 
+An example system unit file `xolentum-explorer-services.service` has been provided. Replace the necessary information in the file, copy it into the system unit files directory and start the API. 
 
 ```sh
-sudo cp xolentum-explorer-utils.service /etc/systemd/system
+sudo cp xolentum-explorer-services.service /etc/systemd/system
 
 sudo systemctl daemon-reload
-sudo systemctl enable --now xolentum-explorer-utils
+sudo systemctl enable --now xolentum-explorer-services
 ``` 
 
-You can check that the service started successfully by using `sudo systemctl status xolentum-explorer-utils`.
+You can check that the service started successfully by using `sudo systemctl status xolentum-explorer-services`.
 
 Install the required cron jobs:
 
 ```sh
-crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/nodes_history_parser.py >/dev/null 2>&1"; } | crontab -
-crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/pools_history_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-services/utils/nodes_history_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-services/utils/pools_history_parser.py >/dev/null 2>&1"; } | crontab -
 
-crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/nodes_parser.py >/dev/null 2>&1"; } | crontab -
-crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/pools_parser.py >/dev/null 2>&1"; } | crontab -
-crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-utils/utils/blocks_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-services/utils/nodes_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-services/utils/pools_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * python3 ~/xolentum-explorer-services/utils/blocks_parser.py >/dev/null 2>&1"; } | crontab -
 ```
 
 ## License 
