@@ -84,20 +84,24 @@ for pool in pools:
     except:
         continue
 
-    if pool['type'] == 'cn-js':
-        height, hash_rate, miners, fee, min_payout, last_block = cn_js_info(pool['api'])
+    try:
+        if pool['type'] == 'cn-js':
+            height, hash_rate, miners, fee, min_payout, last_block = cn_js_info(pool['api'])
 
-    elif pool['type'] == 'other':
-        if 'gntl' in pool['name'].lower():
-            height, hash_rate, miners, fee, min_payout, last_block = gntl_info(pool['api'])
+        elif pool['type'] == 'other':
+            if 'gntl' in pool['name'].lower():
+                height, hash_rate, miners, fee, min_payout, last_block = gntl_info(pool['api'])
 
-        elif 'rplant' in pool['name'].lower():
-            height, hash_rate, miners, fee, min_payout, last_block = rplant_info(pool['api'])
+            elif 'rplant' in pool['name'].lower():
+                height, hash_rate, miners, fee, min_payout, last_block = rplant_info(pool['api'])
+
+            else:
+                continue
 
         else:
             continue
 
-    else:
+    except json.decoder.JSONDecodeError:
         continue
 
     with open(Path(__file__).parent / '../data/pools-history-data.json') as f:
