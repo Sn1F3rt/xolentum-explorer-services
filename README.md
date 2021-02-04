@@ -37,16 +37,16 @@ For production, it is recommended to use gunicorn:
 gunicorn -w 5 -b 127.0.0.1:5000 wsgi
 ```
 
-An example system unit file `xolentum-explorer-services.service` has been provided. Replace the necessary information in the file, copy it into the system unit files directory and start the API. 
+An example system unit file `xes.service` has been provided. Replace the necessary information in the file, copy it into the system unit files directory and start the API. 
 
 ```sh
-sudo cp xolentum-explorer-services.service /etc/systemd/system
+sudo cp xes.service /etc/systemd/system
 
 sudo systemctl daemon-reload
-sudo systemctl enable --now xolentum-explorer-services
+sudo systemctl enable --now xes
 ``` 
 
-You can check that the service started successfully by using `sudo systemctl status xolentum-explorer-services`.
+You can check that the service started successfully by using `sudo systemctl status xes`.
 
 Install the required cron jobs:
 
