@@ -6,8 +6,8 @@ After=network.target
 User=sohamb03
 
 WorkingDirectory=/home/sohamb03/xolentum-explorer-services/api/
-Environment="PATH=/home/sohamb03/.local/share/virtualenvs/xolentum-explorer-services-xyz123/bin"
-ExecStart=/home/sohamb03/.local/share/virtualenvs/xolentum-explorer-services-xyz123/bin/gunicorn --workers 3 --bind unix:xes.sock -m 007 wsgi
+Environment="PATH=/home/sohamb03/xolentum-explorer-services/.venv/bin"
+ExecStart=/home/sohamb03/xolentum-explorer-services/.venv/bin/gunicorn --workers 3 --bind unix:xes.sock -m 007 wsgi
 
 [Install]
 WantedBy=multi-user.target

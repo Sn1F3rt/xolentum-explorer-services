@@ -22,10 +22,10 @@ git clone https://github.com/sohamb03/xolentum-explorer-services.git
 Install `pipenv` and then install the dependencies, and enter the shell. 
 
 ```
-python3 -m pip install pipenv
+python3 -m venv .venv
 
-pipenv install
-pipenv shell
+source .venv/bin/activate
+pip3 install -r requirements.txt
 ```
 
 ## Usage
@@ -33,7 +33,7 @@ pipenv shell
 For development:
 
 ```
-cd api && python3 main.py
+python3 -m api.main 
 ```
 
 For production, it is recommended to use gunicorn and run the application as a system service, proxied by Nginx.
@@ -62,12 +62,12 @@ sudo systemctl enable --now nginx
 Install the required cron jobs:
 
 ```
-crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; python3 ~/xolentum-explorer-services/utils/nodes_history_parser.py >/dev/null 2>&1"; } | crontab -
-crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; python3 ~/xolentum-explorer-services/utils/pools_history_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/nodes_history_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/pools_history_parser.py >/dev/null 2>&1"; } | crontab -
 
-crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; python3 ~/xolentum-explorer-services/utils/nodes_parser.py >/dev/null 2>&1"; } | crontab -
-crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; python3 ~/xolentum-explorer-services/utils/pools_parser.py >/dev/null 2>&1"; } | crontab -
-crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; python3 ~/xolentum-explorer-services/utils/blocks_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/nodes_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/pools_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/blocks_parser.py >/dev/null 2>&1"; } | crontab -
 ```
 
 ## License 
