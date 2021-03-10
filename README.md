@@ -65,9 +65,9 @@ Install the required cron jobs:
 crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/nodes_history_parser.py >/dev/null 2>&1"; } | crontab -
 crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/pools_history_parser.py >/dev/null 2>&1"; } | crontab -
 
-crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/nodes_parser.py >/dev/null 2>&1"; } | crontab -
-crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/pools_parser.py >/dev/null 2>&1"; } | crontab -
-crontab -l | { cat; echo "*/2 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/blocks_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/3 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/nodes_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/3 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/pools_parser.py >/dev/null 2>&1"; } | crontab -
+crontab -l | { cat; echo "*/10 * * * * . $HOME/.bash_profile; ~/xolentum-explorer-services/.venv/bin/python3 ~/xolentum-explorer-services/utils/blocks_parser.py >/dev/null 2>&1"; } | crontab -
 ```
 
 ## License 
