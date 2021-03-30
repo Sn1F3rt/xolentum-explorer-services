@@ -37,6 +37,7 @@ logging.info('Initializing history')
 subprocess.call([sys.executable, Path(__file__).parent / '../utils/history_data_init.py'])
 logging.info('History initialized')
 
+"""
 if Path(Path(__file__).parent / '../data/blocks-data.json').exists():
     logging.info('Updating existing cached blocks data')
     subprocess.call([sys.executable, Path(__file__).parent / '../utils/blocks_parser.py'])
@@ -48,6 +49,7 @@ else:
     logging.info('Blocks data initialized')
 
 logging.info('Application successfully initialized')
+"""
 
 
 @app.route('/nodes', methods=['GET'])
