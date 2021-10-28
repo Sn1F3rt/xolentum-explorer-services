@@ -73,4 +73,4 @@ crontab -l | { cat; echo "*/3 * * * * . $HOME/.bash_profile; ~/xolentum-explorer
 
 [BSD-3-Clause License](LICENSE)
 
-Copyright &copy; 2020 Sayan Bhattacharyya, The Xolentum Project
+Copyright &copy; 2020-present Sayan Bhattacharyya, The Xolentum Project
